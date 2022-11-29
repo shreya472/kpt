@@ -1,0 +1,26 @@
+steps:
+# build the container image and push to Artifact registry
+- name: 'gcr.io/kaniko-project/executor:latest'
+  args:
+    [
+      "--dockerfile=Dockerfile",
+      "--cache=true",
+      "--cache-ttl=6h",
+      "--destination=us-central1-docker.pkg.dev/searce-playground-v1/kpt-test-repo/kpt-image"
+    ]
+  
+# deploy container image to GKE
+- name: "gcr.io/cloud-builders/gke-deploy"
+  entrypoint: 'bash'
+  args: 
+  - '-c'
+  - |
+    while IFS=' ' read -r deplname path; do
+      sed -i "s/kpt-test-deployment/$deplname/g" Kptfile &&
+      sed -i "s/tag/$SHORT_SHA/g" deployment.yaml &&
+      kpt fn render
+      sed -i "s/$deplname/kpt-test-deployment/g" Kptfile &&
+      sed -i "s/$SHORT_SHA/tag/g" deployment.yaml &&
+    done < ./consumer_names.txt
+options:
+ logging: CLOUD_LOGGING_ONLY

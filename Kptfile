@@ -1,0 +1,36 @@
+apiVersion: kpt.dev/v1
+kind: Kptfile
+metadata:
+  name: search-replace-simple
+pipeline:
+  mutators:
+    - image: gcr.io/kpt-fn/search-replace:unstable
+      configMap:
+        by-path: metadata.name
+        by-value: kpt-test-deployment
+        put-value: test-deployment
+    - image: gcr.io/kpt-fn/search-replace:unstable
+      configMap:
+        by-path: metadata.labels.app
+        by-value: kpt-test-deployment
+        put-value: test-deployment
+    - image: gcr.io/kpt-fn/search-replace:unstable
+      configMap:
+        by-path: metadata.namespace
+        by-value: kpt-test-namespace
+        put-value: test-namespace
+    - image: gcr.io/kpt-fn/search-replace:unstable
+      configMap:
+        by-path: spec.selector.matchLabels.app
+        by-value: kpt-test-deployment
+        put-value: test-deployment
+    - image: gcr.io/kpt-fn/search-replace:unstable
+      configMap:
+        by-path: spec.template.metadata.labels.app
+        by-value: kpt-test-deployment
+        put-value: test-deployment
+    # - image: gcr.io/kpt-fn/search-replace:unstable
+    #   configMap:
+    #     by-path: spec.template.spec.containers[$name]
+    #     by-value: kpt-test-deployment
+    #     put-value: test-deployment

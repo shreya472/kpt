@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: kpt-test-deployment
-        image: us-central1-docker.pkg.dev/searce-playground-v1/kpt-test-repo/kpt-image:tag
+        image: us-central1-docker.pkg.dev/$PROJECT_ID/kpt-test-repo/kpt-image:tag
         ports:
         - containerPort: 80
           protocol: TCP
